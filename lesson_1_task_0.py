@@ -1,2 +1,2 @@
-my_heigh = 170
-print(my_heigh)
+my_height = 170
+print(my_height)
