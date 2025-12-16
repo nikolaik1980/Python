@@ -31,28 +31,22 @@ def test_form_validation():
 
         # 4. Проверить, что поле Zip code подсвечено красным
         zip_code_field = wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, 'input[name="zip-code"]'))
+            EC.presence_of_element_located((By.CSS_SELECTOR, '#zip-code.alert-danger'))
         )
-        # Проверяем наличие класса invalid (обычно красное подсвечивание)
-        assert "is-invalid" in zip_code_field.get_attribute("class"), "Поле Zip code должно быть подсвечено красным"
+
+        # Дополнительная проверка, что поле действительно имеет класс alert-danger
+        assert "alert-danger" in zip_code_field.get_attribute("class")
 
         # 5. Проверить, что остальные поля подсвечены зеленым
         green_fields = [
-            'input[name="first-name"]',
-            'input[name="last-name"]',
-            'input[name="address"]',
-            'input[name="e-mail"]',
-            'input[name="phone"]',
-            'input[name="city"]',
-            'input[name="country"]',
-            'input[name="job-position"]',
-            'input[name="company"]'
+            'first-name', 'last-name', 'address', 'e-mail',
+            'phone', 'city', 'country', 'job-position', 'company'
         ]
 
-        for field_selector in green_fields:
-            field = driver.find_element(By.CSS_SELECTOR, field_selector)
-            # Проверяем наличие класса valid (обычно зеленое подсвечивание)
-            assert "is-valid" in field.get_attribute("class"), f"Поле {field_selector} должно быть подсвечено зеленым"
+        for field_name in green_fields:
+            field = driver.find_element(By.ID, field_name)
+            assert "alert-success" in field.get_attribute("class"), \
+                f"Поле {field_name} не подсвечено зеленым"
 
     finally:
         driver.quit()
