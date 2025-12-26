@@ -56,12 +56,27 @@ class TestShoppingCart:
         # 8. Вывести сумму в консоль
         print(f"Итоговая сумма: ${total_amount}")
 
-        # 9. Проверки
-        assert total_amount == "58.29", f"Ожидалась сумма $58.29, но получено ${total_amount}"
-        assert total_text == "Total: $58.29", f"Ожидалось 'Total: $58.29', но получено '{total_text}'"
+        # 9. Проверки (исправлено: строки разбиты для соблюдения 79 символов)
+        expected_total = "58.29"
+        expected_text = "Total: $58.29"
+
+        assert total_amount == expected_total, (
+            f"Ожидалась сумма ${expected_total}, "
+            f"но получено ${total_amount}"
+        )
+
+        assert total_text == expected_text, (
+            f"Ожидалось '{expected_text}', "
+            f"но получено '{total_text}'"
+        )
 
         # Дополнительная проверка количества товаров в корзине
-        assert cart_page.get_cart_items_count() == 3, f"Ожидалось 3 товара в корзине"
+        # Исправлено: убраны ненужные f-строки
+        cart_items_count = cart_page.get_cart_items_count()
+        assert cart_items_count == 3, (
+            f"Ожидалось 3 товара в корзине, "
+            f"но получено {cart_items_count}"
+        )
 
 
 if __name__ == "__main__":

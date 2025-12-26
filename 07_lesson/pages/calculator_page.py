@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class CalculatorPage:
@@ -12,7 +12,10 @@ class CalculatorPage:
 
     def open(self):
         """Открыть страницу калькулятора"""
-        self.driver.get("https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html")
+        self.driver.get(
+            "https://bonigarcia.dev/selenium-webdriver-java/"
+            "slow-calculator.html"
+        )
         return self
 
     def set_delay(self, delay):
@@ -24,7 +27,9 @@ class CalculatorPage:
 
     def click_button(self, button_text):
         """Нажать кнопку калькулятора по тексту"""
-        button = self.driver.find_element(By.XPATH, f"//span[text()='{button_text}']")
+        button = self.driver.find_element(
+            By.XPATH, f"//span[text()='{button_text}']"
+        )
         button.click()
         return self
 
@@ -42,6 +47,8 @@ class CalculatorPage:
     def wait_for_result(self, expected_result):
         """Ожидать появления результата"""
         self.wait.until(
-            EC.text_to_be_present_in_element((By.CLASS_NAME, "screen"), str(expected_result))
+            EC.text_to_be_present_in_element(
+                (By.CLASS_NAME, "screen"), str(expected_result)
+            )
         )
         return self.get_result()

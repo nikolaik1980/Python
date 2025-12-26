@@ -21,4 +21,8 @@ class LoginPage:
         login_button.click()
 
         # Ждем перехода на главную страницу
-        self.wait.until(EC.presence_of_element_located((By.CLASS_NAME, "inventory_list")))
+        self.wait.until(
+            EC.presence_of_element_located(
+                (By.CLASS_NAME, "inventory_list")
+            )
+        )

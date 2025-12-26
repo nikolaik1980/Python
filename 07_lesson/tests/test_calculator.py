@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_calculator_with_45_second_delay():
     """
     Тест калькулятора с задержкой 45 секунд
@@ -37,3 +34,7 @@ def test_calculator_with_45_second_delay():
     finally:
         # Закрываем браузер
         driver.quit()
+
+
+if __name__ == "__main__":
+    test_calculator_with_45_second_delay()

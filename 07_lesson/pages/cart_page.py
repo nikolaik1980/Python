@@ -10,7 +10,9 @@ class CartPage:
         checkout_button.click()
 
     def get_cart_items_count(self):
-        cart_badge = self.driver.find_elements(By.CLASS_NAME, "shopping_cart_badge")
+        cart_badge = self.driver.find_elements(
+            By.CLASS_NAME, "shopping_cart_badge"
+        )
         if cart_badge:
             return int(cart_badge[0].text)
         return 0
