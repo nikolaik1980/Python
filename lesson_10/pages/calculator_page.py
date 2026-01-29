@@ -3,6 +3,7 @@ Page Object для страницы калькулятора
 """
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
 from .base_page import BasePage
 import allure
 
@@ -27,7 +28,9 @@ class CalculatorPage(BasePage):
         Args:
             driver: Экземпляр Selenium WebDriver
         """
-        super().__init__(driver, "https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html")
+        super().__init__(driver,
+                         "https://bonigarcia.dev/selenium-webdriver-java"
+                         "/slow-calculator.html")
 
     @allure.step("Установить задержку расчета: {delay} секунд")
     def set_delay(self, delay: str) -> None:
@@ -63,3 +66,30 @@ class CalculatorPage(BasePage):
             str: Текст результата
         """
         return self.get_text(self.RESULT)
+
+    @allure.step("Ожидать результат вычисления с задержкой {delay} секунд")
+    def wait_for_result_with_delay(self, delay: int) -> str:
+        """
+        Ожидает результат вычисления с учетом установленной задержки
+
+        Args:
+            delay: Задержка расчета в секундах
+
+        Returns:
+            str: Текст результата
+        """
+        # Ожидаем, что результат изменится на "15"
+        # Добавляем небольшой запас времени для стабильности теста
+        wait_time = delay + 2
+
+        def result_is_calculated(driver):
+            """Вспомогательная функция для ожидания результата."""
+            result_text = self.get_result()
+            return "15" in result_text
+
+        # Используем явное ожидание
+        WebDriverWait(self.driver, wait_time).until(
+            lambda driver: result_is_calculated(driver)
+        )
+
+        return self.get_result()

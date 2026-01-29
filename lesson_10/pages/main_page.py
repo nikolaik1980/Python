@@ -3,6 +3,8 @@ Page Object для главной страницы интернет-магази
 """
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from .base_page import BasePage
 import allure
 
@@ -35,7 +37,8 @@ class MainPage(BasePage):
         Args:
             driver: Экземпляр Selenium WebDriver
         """
-        super().__init__(driver, "https://www.saucedemo.com/inventory.html")
+        super().__init__(driver,
+                         "https://www.saucedemo.com/inventory.html")
 
     @allure.step("Получить заголовок страницы товаров")
     def get_page_title(self) -> str:
@@ -106,7 +109,7 @@ class MainPage(BasePage):
             None
         """
         product_items = self.find_elements(self.PRODUCT_ITEMS)
-        for item in product_items:
+        for index, item in enumerate(product_items):
             name_element = item.find_element(*self.PRODUCT_NAME)
             if name_element.text == product_name:
                 add_button = item.find_element(*self.ADD_TO_CART_BUTTON)
@@ -152,7 +155,7 @@ class MainPage(BasePage):
         try:
             badge = self.find_element(self.CART_BADGE, timeout=2)
             return int(badge.text)
-        except:
+        except Exception:
             return 0
 
     @allure.step("Сортировать товары по: {sort_option}")
@@ -195,9 +198,11 @@ class MainPage(BasePage):
             None
         """
         self.open_menu()
-        # Ждем пока меню откроется
-        import time
-        time.sleep(1)
+
+        # Явное ожидание появления меню
+        wait = WebDriverWait(self.driver, 5)
+        wait.until(EC.element_to_be_clickable(self.LOGOUT_LINK))
+
         self.click_element(self.LOGOUT_LINK)
 
     @allure.step("Получить информацию о товаре по индексу: {product_index}")
@@ -223,7 +228,9 @@ class MainPage(BasePage):
         info = {
             'name': item.find_element(*self.PRODUCT_NAME).text,
             'price': item.find_element(*self.PRODUCT_PRICE).text,
-            'description': item.find_element(By.CSS_SELECTOR, ".inventory_item_desc").text,
+            'description': item.find_element(
+                By.CSS_SELECTOR, ".inventory_item_desc"
+            ).text,
             'button_text': item.find_element(*self.ADD_TO_CART_BUTTON).text
         }
         return info

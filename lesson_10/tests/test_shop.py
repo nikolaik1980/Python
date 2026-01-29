@@ -41,8 +41,10 @@ class TestShop:
 
         with allure.step("Проверить успешный вход"):
             main_page = MainPage(driver)
-            assert main_page.are_products_displayed(), "Товары не отображаются после входа"
-            assert "Products" in main_page.get_page_title(), "Неверный заголовок страницы"
+            error_msg = "Товары не отображаются после входа"
+            assert main_page.are_products_displayed(), error_msg
+            error_msg = "Неверный заголовок страницы"
+            assert "Products" in main_page.get_page_title(), error_msg
 
     @allure.title("Тест добавления товара в корзину")
     @allure.description("""
@@ -74,14 +76,16 @@ class TestShop:
 
         with allure.step("Проверить счетчик корзины"):
             cart_count = main_page.get_cart_badge_count()
-            assert cart_count == 1, f"Ожидалось 1 товар в корзине, получено: {cart_count}"
+            error_msg = f"Ожидалось 1 товар в корзине, получено: {cart_count}"
+            assert cart_count == 1, error_msg
 
         with allure.step("Перейти в корзину"):
             main_page.go_to_cart()
 
         with allure.step("Проверить наличие товара в корзине"):
             cart_page = CartPage(driver)
-            assert cart_page.is_item_in_cart(product_name), f"Товар {product_name} не найден в корзине"
+            error_msg = f"Товар {product_name} не найден в корзине"
+            assert cart_page.is_item_in_cart(product_name), error_msg
 
     @allure.title("Тест оформления заказа")
     @allure.description("""
@@ -121,18 +125,24 @@ class TestShop:
         checkout_page = CheckoutPage(driver)
 
         with allure.step("Заполнить информацию для заказа"):
-            checkout_page.fill_checkout_information("Иван", "Иванов", "123456")
+            checkout_page.fill_checkout_information(
+                "Иван",
+                "Иванов",
+                "123456"
+            )
             checkout_page.continue_to_overview()
 
         with allure.step("Проверить корректность расчетов"):
-            assert checkout_page.verify_calculations(), "Расчеты на странице обзора некорректны"
+            error_msg = "Расчеты на странице обзора некорректны"
+            assert checkout_page.verify_calculations(), error_msg
 
         with allure.step("Завершить оформление заказа"):
             checkout_page.finish_checkout()
 
         with allure.step("Проверить сообщение об успешном оформлении"):
             message = checkout_page.get_completion_message()
-            assert "Thank you for your order" in message, f"Неверное сообщение об успехе: {message}"
+            error_msg = f"Неверное сообщение об успехе: {message}"
+            assert "Thank you for your order" in message, error_msg
 
     @allure.title("Тест сортировки товаров")
     @allure.description("""
@@ -163,20 +173,25 @@ class TestShop:
 
         main_page = MainPage(driver)
 
-        with allure.step(f"Применить сортировку: {sort_option}"):
+        step_msg = f"Применить сортировку: {sort_option}"
+        with allure.step(step_msg):
             main_page.sort_products(sort_option)
 
         with allure.step("Проверить порядок товаров"):
             if sort_option in ["az", "za"]:
                 # Проверка сортировки по имени
                 product_names = main_page.get_all_product_names()
-                sorted_names = sorted(product_names, reverse=(not expected_order))
-                assert product_names == sorted_names, "Сортировка по имени работает некорректно"
+                reverse_order = not expected_order
+                sorted_names = sorted(product_names, reverse=reverse_order)
+                error_msg = "Сортировка по имени работает некорректно"
+                assert product_names == sorted_names, error_msg
             else:
                 # Проверка сортировки по цене
                 product_prices = main_page.get_all_product_prices()
-                sorted_prices = sorted(product_prices, reverse=(not expected_order))
-                assert product_prices == sorted_prices, "Сортировка по цене работает некорректно"
+                reverse_order = not expected_order
+                sorted_prices = sorted(product_prices, reverse=reverse_order)
+                error_msg = "Сортировка по цене работает некорректно"
+                assert product_prices == sorted_prices, error_msg
 
     @allure.title("Тест удаления товара из корзины")
     @allure.severity(allure.severity_level.NORMAL)
@@ -211,13 +226,15 @@ class TestShop:
         cart_page = CartPage(driver)
 
         with allure.step("Проверить наличие товара в корзине"):
-            assert cart_page.is_item_in_cart(product_name), "Товар не добавлен в корзину"
+            error_msg = "Товар не добавлен в корзину"
+            assert cart_page.is_item_in_cart(product_name), error_msg
 
         with allure.step("Удалить товар из корзины"):
             cart_page.remove_item_by_name(product_name)
 
         with allure.step("Проверить, что корзина пуста"):
-            assert cart_page.is_cart_empty(), "Корзина не пуста после удаления товара"
+            error_msg = "Корзина не пуста после удаления товара"
+            assert cart_page.is_cart_empty(), error_msg
 
     @allure.title("Тест выхода из системы")
     @allure.severity(allure.severity_level.NORMAL)
@@ -243,5 +260,9 @@ class TestShop:
         with allure.step("Выполнить выход из системы"):
             main_page.logout()
 
-        with allure.step("Проверить, что отображается форма авторизации"):
-            assert login_page.is_element_visible(login_page.LOGIN_BUTTON), "Не удалось выйти из системы"
+        with allure.step("Проверить форму авторизации"):
+            error_msg = "Не удалось выйти из системы"
+            element_visible = login_page.is_element_visible(
+                login_page.LOGIN_BUTTON
+            )
+            assert element_visible, error_msg

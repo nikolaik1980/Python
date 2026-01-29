@@ -34,18 +34,16 @@ class TestCalculator:
         with allure.step("Открыть страницу калькулятора"):
             calculator_page.open()
 
-        with allure.step("Установить задержку расчета"):
+        with allure.step("Установить задержку расчета 45 секунд"):
             calculator_page.set_delay("45")
 
         with allure.step("Выполнить вычисление 7 + 8"):
             calculator_page.calculate_7_plus_8()
 
-        with allure.step("Ожидать результат в течение 46 секунд"):
-            import time
-            time.sleep(46)
+        with allure.step("Ожидать результат в течение 47 секунд"):
+            result = calculator_page.wait_for_result_with_delay(45)
 
         with allure.step("Проверить результат вычисления"):
-            result = calculator_page.get_result()
             assert "15" in result, f"Ожидался результат 15, получен: {result}"
 
     @allure.title("Тест калькулятора с задержкой 3 секунды")
@@ -53,7 +51,7 @@ class TestCalculator:
     Тест проверяет быстрый расчет калькулятора:
     1. Установить задержку 3 секунды
     2. Выполнить операцию 7 + 8
-    3. Проверить результат через 4 секунды
+    3. Проверить результат через ожидание
     """)
     def test_fast_calculator(self, driver):
         """
@@ -73,10 +71,8 @@ class TestCalculator:
         with allure.step("Выполнить вычисление 7 + 8"):
             calculator_page.calculate_7_plus_8()
 
-        with allure.step("Ожидать результат 4 секунды"):
-            import time
-            time.sleep(4)
+        with allure.step("Ожидать результат в течение 5 секунд"):
+            result = calculator_page.wait_for_result_with_delay(3)
 
         with allure.step("Проверить результат вычисления"):
-            result = calculator_page.get_result()
             assert "15" in result, f"Ожидался результат 15, получен: {result}"

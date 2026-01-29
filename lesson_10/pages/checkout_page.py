@@ -43,10 +43,18 @@ class CheckoutPage(BasePage):
         Args:
             driver: Экземпляр Selenium WebDriver
         """
-        super().__init__(driver, "https://www.saucedemo.com/checkout-step-one.html")
+        super().__init__(
+            driver,
+            "https://www.saucedemo.com/checkout-step-one.html"
+        )
 
     @allure.step("Заполнить информацию для заказа")
-    def fill_checkout_information(self, first_name: str, last_name: str, postal_code: str) -> None:
+    def fill_checkout_information(
+        self,
+        first_name: str,
+        last_name: str,
+        postal_code: str
+    ) -> None:
         """
         Заполняет форму с информацией для оформления заказа
 
@@ -192,7 +200,12 @@ class CheckoutPage(BasePage):
         self.click_element(self.BACK_HOME_BUTTON)
 
     @allure.step("Выполнить полный процесс оформления заказа")
-    def complete_checkout_process(self, first_name: str, last_name: str, postal_code: str) -> str:
+    def complete_checkout_process(
+        self,
+        first_name: str,
+        last_name: str,
+        postal_code: str
+    ) -> str:
         """
         Выполняет полный процесс оформления заказа
 

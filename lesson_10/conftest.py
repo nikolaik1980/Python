@@ -21,7 +21,9 @@ def driver():
         options = webdriver.ChromeOptions()
         options.add_argument("--start-maximized")
         options.add_argument("--disable-notifications")
-        options.add_experimental_option("excludeSwitches", ["enable-logging"])
+        options.add_experimental_option(
+            "excludeSwitches", ["enable-logging"]
+        )
 
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)

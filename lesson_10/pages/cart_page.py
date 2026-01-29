@@ -32,7 +32,8 @@ class CartPage(BasePage):
         Args:
             driver: Экземпляр Selenium WebDriver
         """
-        super().__init__(driver, "https://www.saucedemo.com/cart.html")
+        super().__init__(driver,
+                         "https://www.saucedemo.com/cart.html")
 
     @allure.step("Получить количество товаров в корзине")
     def get_cart_item_count(self) -> int:
@@ -132,7 +133,7 @@ class CartPage(BasePage):
             # Проверяем наличие бейджа с количеством товаров
             badge = self.find_element(self.CART_BADGE, timeout=2)
             return False
-        except:
+        except Exception:
             # Проверяем наличие товаров в корзине
             items = self.find_elements(self.CART_ITEMS)
             return len(items) == 0
@@ -192,6 +193,6 @@ class CartPage(BasePage):
                 try:
                     quantity_element = item.find_element(*self.CART_QUANTITY)
                     return int(quantity_element.text)
-                except:
+                except Exception:
                     return 1
         return 0
